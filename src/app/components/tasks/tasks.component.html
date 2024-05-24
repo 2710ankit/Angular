@@ -1,0 +1,29 @@
+<div class="task-manager-container">
+    <h2>Task Manager</h2>
+    <div class="filter-form">
+        <input type="text" id="search" placeholder="Search tasks...">
+        <button onclick="searchTasks()">Search</button>
+    </div>
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Date</th>
+                <th>Made By</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Task 1</td>
+                <td>2024-05-25</td>
+                <td>User 1</td>
+                <td>
+                    <button onclick="markComplete(this)">Mark Complete</button>
+                    <button onclick="deleteTask(this)">Delete</button>
+                </td>
+            </tr>
+            <!-- More tasks go here -->
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,66 @@
+$primary-color: #2d2e2e;
+$secondary-color: #ffffff;
+$hover-color: #636863;
+
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $primary-color;
+    padding: 10px 20px;
+    color: $secondary-color;
+
+    &-logo a {
+        color: $secondary-color;
+        text-decoration: none;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    &-links {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+
+        li {
+            margin: 0 10px;
+
+            a {
+                color: $secondary-color;
+                text-decoration: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: $hover-color;
+                }
+            }
+        }
+    }
+
+    &-user {
+        display: flex;
+        align-items: center;
+
+        .username {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .login-logout {
+            color: $secondary-color;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: $hover-color;
+            }
+        }
+    }
+}
