@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -11,4 +12,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
 })
 export class HomeComponent {
 
+  constructor(@Inject(PLATFORM_ID) platformId: Object){
+    if(isPlatformBrowser(platformId)){
+
+      const router = inject(Router);
+      router.navigate(['tasks'])
+    }
+  }
 }

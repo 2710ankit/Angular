@@ -1,11 +1,10 @@
-import { inject } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-// import { Router } from "express";
+import { inject, PLATFORM_ID } from '@angular/core';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { CanMatchFn } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
-export const authGuard: CanMatchFn = (
+export const authGuard: CanActivateFn = (
   route,
   segments
 ):
@@ -13,21 +12,38 @@ export const authGuard: CanMatchFn = (
   | Promise<boolean | UrlTree>
   | boolean
   | UrlTree => {
-    console.log(1)
-  return inject(Router).createUrlTree(['login']);
-  //   return true;
+  const platformId = inject(PLATFORM_ID);
+  if (isPlatformBrowser(platformId)) {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      return true;
+    } else {
+      return inject(Router).createUrlTree(['login']);
+    }
+  }
+
+  return false;
 };
 
+export const loginGuard: CanActivateFn = (
+  route,
+  segments
+):
+  | Observable<boolean | UrlTree>
+  | Promise<boolean | UrlTree>
+  | boolean
+  | UrlTree => {
+  const platformId = inject(PLATFORM_ID);
+  if (isPlatformBrowser(platformId)) {
+    const token = localStorage.getItem('token');
 
-export const homeGuard: CanMatchFn = (
-    route,
-    segments
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree => {
-        console.log(2)
-    return inject(Router).createUrlTree(['/tasks']);
-    //   return true;
-  };
+    if (!token) {
+      return true;
+    } else {
+      return inject(Router).createUrlTree(['tasks']);
+    }
+  }
+
+  return false;
+};
