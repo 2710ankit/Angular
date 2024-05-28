@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -9,6 +9,8 @@ import {
 } from '@angular/common/http';
 
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { error } from 'console';
+import { Router } from '@angular/router';
 
 const baseUrl = 'http://localhost:3001/api';
 
@@ -19,6 +21,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const router = inject(Router);
     console.log('interceptor', req.url);
     req = req.clone({ url: `${baseUrl}/${req.url}` });
     const token = localStorage.getItem('token');
@@ -38,6 +41,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             localStorage.setItem('token', token); // Save token to local storage
           }
         }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if ([401, 402, 403].includes(error.status)) {
+          localStorage.clear();
+          router.navigate(['/login']);
+        }
+        return throwError(() => new Error('error'));
       })
     );
   }
