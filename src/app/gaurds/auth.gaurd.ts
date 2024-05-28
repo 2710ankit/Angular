@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = (
   | UrlTree => {
   const platformId = inject(PLATFORM_ID);
   if (isPlatformBrowser(platformId)) {
-    const token = getCookie('token');
+    const token = localStorage.getItem('token');
 
     if (token) {
       return true;
@@ -36,7 +36,7 @@ export const loginGuard: CanActivateFn = (
   | UrlTree => {
   const platformId = inject(PLATFORM_ID);
   if (isPlatformBrowser(platformId)) {
-    const token = getCookie('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       return true;
@@ -46,16 +46,4 @@ export const loginGuard: CanActivateFn = (
   }
 
   return false;
-};
-
-const getCookie = (cname: string) => {
-  const name = cname + '=';
-  const ca = document.cookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    const c = ca[i].trim();
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return '';
 };

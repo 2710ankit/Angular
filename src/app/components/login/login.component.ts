@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private router:Router) {}
 
   ngOnInit(): void {}
 
@@ -23,9 +24,12 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.httpClient
-      .post('user/login', { username: this.username, password: this.password })
+      .post('auth/login', { username: this.username, password: this.password })
       .subscribe({
-        next: (d) => {},
+        next: (d) => {
+
+          this.router.navigate(['/tasks'])
+        },
         error: (e) => {
           alert(e.error.message.message);
         },

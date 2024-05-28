@@ -5,9 +5,10 @@ import {
   HttpHandler,
   HttpRequest,
   HttpErrorResponse,
+  HttpResponse,
 } from '@angular/common/http';
 
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 const baseUrl = 'http://localhost:3001/api';
 
@@ -20,17 +21,24 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     console.log('interceptor', req.url);
     req = req.clone({ url: `${baseUrl}/${req.url}` });
+    const token = localStorage.getItem('token');
 
-    // console.log(req)
-    // const authToken = 'YOUR_AUTH_TOKEN_HERE';
+    const authReq = req.clone({
+      setHeaders: {
+        Authorization: `${token}`,
+      },
+    });
 
-    // // Clone the request and add the authorization header
-    // const authReq = req.clone({
-    //   setHeaders: {
-    //     Authorization: `Bearer ${authToken}`,
-    //   },
-    // });
-
-    return next.handle(req) 
+    return next.handle(authReq).pipe(
+      tap((event) => {
+        if (event instanceof HttpResponse) {
+          console.log(event.status);
+          const token = event.headers.get('Authorization');
+          if (token) {
+            localStorage.setItem('token', token); // Save token to local storage
+          }
+        }
+      })
+    );
   }
 }
